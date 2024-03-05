@@ -16,7 +16,7 @@ useEffect(()=>{
   if(token)
   {
      try {
-    const response =  fetch('http://localhost:5000/subsequentlogin', {
+    const response =  fetch('/subsequentlogin', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,

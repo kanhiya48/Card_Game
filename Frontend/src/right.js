@@ -30,7 +30,7 @@ export const Right = () => {
       alert("Input fields are empty")
       return
     }
-   fetch('http://localhost:5000/register',{
+   fetch('https://card-game-self-omega.vercel.app/register',{
     method : 'POST',
     headers :{
       'content-type':'application/json'
@@ -58,7 +58,7 @@ export const Right = () => {
    setusername('');
   }
   const handleLogin=()=>{
-      fetch('http://localhost:5000/login',{
+      fetch('https://card-game-self-omega.vercel.app/login',{
     method : 'POST',
     headers :{
       'content-type':'application/json'

@@ -13,17 +13,21 @@ require('dotenv').config();
 const app = express();
 
 
+    app.use(express.json());
+const corsOptions = {
+  origin: '*',
+  methods: 'GET,PUT,POST,DELETE',
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
+app.use(cors(corsOptions));
+
 const server = http.createServer(app);
 
 // Initialize Socket.IO
-var io = require('socket.io')(server, {
-    cors: {
-      origin: '*',
-    }
-});
+var io = require('socket.io')(server, { cors :{ origins:'*',methods: ["GET", "POST"]}});
 const port = process.env.PORT || 5000;
-app.use(express.json());
-app.use(cors());
+
 
 // Connection URI for MongoDB Atlas
 const uri = process.env.MONGO_URI;
@@ -173,7 +177,7 @@ const collection = db.collection('Register');
 
 
 
-app.get('/scores', verifyToken, (req, res) => {
+app.get('/scores',  (req, res) => {
   const collection = db.collection('Register');
   collection.find({}, { projection: { username: 1, email: 1, gamewin: 1, gameloose: 1 } })
     .toArray()
@@ -202,6 +206,19 @@ app.get('/scores', verifyToken, (req, res) => {
 
 
 app.post('/login', (req, res) => {
+   res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -338,7 +355,9 @@ app.post('/register', (req, res) => {
 
     // Start the server
  
-
+server.prependListener("request", (req, res) => {
+   res.setHeader("Access-Control-Allow-Origin", "*");
+});
     // Start the server
     server.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);

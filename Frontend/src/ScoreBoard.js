@@ -10,7 +10,7 @@ const LiveScoreBoard = () => {
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        fetch('http://localhost:5000/scores', {
+        fetch('https://card-game-self-omega.vercel.app/scores', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
